@@ -1,0 +1,49 @@
+plugins {
+	id 'java' 
+	id 'com.github.johnrengelman.shadow' version '8.1.1' 
+}
+
+group = 'io.github.pmctools.umbj'
+version = '0.1'
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_1_9
+	targetCompatibility = JavaVersion.VERSION_1_9
+	
+	withSourcesJar()
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.apache.commons:commons-compress:1.26.1'
+	implementation 'it.unimi.dsi:fastutil:8.5.13'
+	implementation 'com.google.code.gson:gson:2.11.0'
+	implementation 'org.tukaani:xz:1.10'
+}
+
+// gradle packageLibrary packages both umbj and dependency jars
+tasks.register('packageLibrary', Copy) {
+	dependsOn build
+	// Get external dependencies
+	from configurations.runtimeClasspath
+	// Get library and source jar
+	from layout.buildDirectory.dir('libs')
+	into 'dist'
+}
+
+// gradle fatJar builds a fat JAR
+tasks.register('fatJar', Jar) {
+	// Call the file umbj-x.y-all.jar
+    archiveClassifier = 'all'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes 'Main-Class': 'your.package.Main'
+    }
+    from sourceSets.main.output
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}

@@ -1,0 +1,26 @@
+# Gradle files
+.gradle/
+build/
+
+# Distribution folder
+dist/
+
+# Log files
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE specific files (IntelliJ, Eclipse, VS Code)
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+.vscode/
+
+# Keep the Gradle Wrapper
+!gradle/wrapper/gradle-wrapper.jar
+!gradlew
+!gradlew.bat
