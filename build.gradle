@@ -24,6 +24,21 @@ dependencies {
 	implementation 'org.tukaani:xz:1.10'
 }
 
+// Demo code
+sourceSets {
+    demo {
+        java.srcDir 'src/demo/java'
+        compileClasspath += sourceSets.main.output + configurations.compileClasspath
+        runtimeClasspath += sourceSets.main.output + configurations.runtimeClasspath
+    }
+}
+
+// This allows you to add dependencies JUST for the demo
+configurations {
+    demoImplementation.extendsFrom implementation
+    demoRuntimeOnly.extendsFrom runtimeOnly
+}
+
 // gradle packageLibrary packages both umbj and dependency jars
 tasks.register('packageLibrary', Copy) {
 	dependsOn build
@@ -46,4 +61,15 @@ tasks.register('fatJar', Jar) {
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
+}
+
+// Run the demo code
+task runDemo(type: JavaExec) {
+    mainClass = 'Demo'
+    classpath = sourceSets.demo.runtimeClasspath
+}
+
+tasks.withType(Javadoc) {
+    options.addBooleanOption('html5', true) // Modern HTML5 output
+    options.addStringOption('Xdoclint:none', '-quiet') // Suppress minor lint warnings
 }
