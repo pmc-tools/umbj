@@ -28,3 +28,9 @@ To build everything into a single JAR, use:
 ``` bash
 gradle fatJar
 ```
+
+You can find some example code in [src/demo/java](src/demo/java) which can be run as:
+
+``` bash
+gradle runDemo
+```
